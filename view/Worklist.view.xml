@@ -1,0 +1,97 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<mvc:View class="sapUiSizeCompact" controllerName="sap.cdp.ums.managerequests.controller.Worklist" xmlns:footerbar="sap.ushell.ui.footerbar"
+	xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+	<Page id="idPage" navButtonPress="onNavBack" showNavButton="true" title="{i18n>worklistViewTitle}">
+		<content>
+			<OverflowToolbar design="Solid">
+				<FacetFilter id="idFacetFilter" reset="onFacetFilterReset" showPersonalization="false" showPopoverOKButton="true" showReset="false"
+					type="Simple">
+					<lists>
+						<FacetFilterList id="idStatusFacetFilterList" items="{/StatusTypes}" listClose="onStatusListClose" multiselect="true"
+							title="{i18n>StatusFacetFilterListTitle}">
+							<items >
+								<FacetFilterItem key="{StatusId}" text="{Status}"/>
+							</items>
+						</FacetFilterList>
+						<FacetFilterList id="idRequestFacetFilterList" items="{/RequestTypes}" listClose="onRequestTypeListClose" multiselect="true"
+							title="{i18n>RequestFacetFilterListTitle}">
+							<items >
+								<FacetFilterItem key="{TypeId}" text="{Type}"/>
+							</items>
+						</FacetFilterList>
+						<FacetFilterList id="idStoreFacetFilterList" items="{/Plants}" listClose="onStoreListClose" multiselect="true"
+							title="{i18n>StoreFacetFilterListTitle}">
+							<items >
+								<FacetFilterItem key="{PlantId}" text="{Description}"/>
+							</items>
+						</FacetFilterList>
+					</lists>
+				</FacetFilter>
+				<DateRangeSelection change="onDateChange" id="idDateRangeSelection" tooltip="{i18n>DateRangeToolTip}" width="20%"/>
+				<ToolbarSpacer/>
+				<Button icon="sap-icon://undo" press="onFilterReset" text="{i18n>resetFilters}" tooltip="{i18n>resetFiltersToolTip}" type="Transparent"/>
+			</OverflowToolbar>
+			<Table busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin" growing="true" growingScrollToLoad="true"
+				id="idTable" items="{ path: '/Requests', sorter: { path: 'CreatedOn', descending: true } }" noDataText="{i18n>tableNoDataText}"
+				updateFinished="onUpdateFinished" width="auto">
+				<headerToolbar>
+					<OverflowToolbar>
+						<Title id="idTableHeader" text="{worklistView>/worklistTableTitle}"/>
+						<ToolbarSpacer/>
+						<SearchField id="idSearch" placeholder="{i18n>SearchFieldText}" search="onSearch" tooltip="{i18n>SearchToolTip}">
+							<layoutData>
+								<OverflowToolbarLayoutData maxWidth="300px" minWidth="200px" shrinkable="true"/>
+							</layoutData>
+						</SearchField>
+						<OverflowToolbarButton icon="sap-icon://sort" press="onSettingsClick" text="{i18n>SortToolTip}" tooltip="{i18n>SortToolTip}"
+							type="Transparent"/>
+					</OverflowToolbar>
+				</headerToolbar>
+				<columns>
+					<Column id="idRequestIdColumn">
+						<Text id="idRequestIdColumnTitle" text="{i18n>TableRequestIdColumnTitle}"/>
+					</Column>
+					<Column id="idTypeColumn">
+						<Text id="idTypeColumnTitle" text="{i18n>TabletypeColumnTitle}"/>
+					</Column>
+					<Column >
+						<Text text="{i18n>TableCategoryColumnTitle}"/>
+					</Column>
+					<Column id="idForEmployeeColumn">
+						<Text id="idForEmployeeColumnTitle" text="{i18n>TableRequestedForColumnTitle}"/>
+					</Column>
+					<Column id="idRequesterColumn">
+						<Text id="idRequesterColumnText" text="{i18n>TableRequesterColumnText}"/>
+					</Column>
+					<Column id="idCreatedOnColumn">
+						<Text id="idCreatedOnColumnText" text="{i18n>TableRequestedOnColumnText}"/>
+					</Column>					
+				</columns>
+				<items>
+					<ColumnListItem press="onPress" type="Navigation">
+						<cells>
+							<ObjectIdentifier text="{Status}" title="{= ( ${RequestId} ? ${RequestId} : ${IstyleReference} ) }"
+								tooltip="{= ( ${IstyleReference} ? ${IstyleReference} : '') }"/>
+							<ObjectIdentifier text="{Type}"/>
+							<ObjectIdentifier text="{Category}"/>
+							<ObjectIdentifier text="{= ( Math.round(${ForId}) !== 0 ? Math.round(${ForId}) : ${worklistView>/dashes} )}"                            title="{For}"/>
+							<ObjectIdentifier text="{= ( Math.round(${RequesterId} ) ) }" title="{Requester}"/>							
+							<Text text="{ path: 'CreatedOn', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }}"></Text>	
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</content>
+		<footer>
+			<OverflowToolbar id="idFooterToolbar">
+				<Button icon="sap-icon://alert" press="onMessagePopPress" tooltip="{i18n>messageToolTip}"/>
+				<ToolbarSpacer/>
+				<Button text="{i18n>newRequest}" icon="sap-icon://create" press="onNew" tooltip="{i18n>newRequestToolTip}"></Button>
+			</OverflowToolbar>
+		</footer>
+	</Page>
+</mvc:View>

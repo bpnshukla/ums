@@ -1,0 +1,8 @@
+{ "application" : "sap.cdp.ums.managerequests",
+  "version" : "1.3.12",
+  "buildNumber" : "2",
+  "buildId" : "2018-04-09_08-44-11",
+  "branch" : "origin/rel-1.3",
+  "revision" : "041c772161e567783391133a8c6f4175f7146634",
+  "GitURL" : ""
+}

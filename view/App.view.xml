@@ -1,0 +1,8 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<mvc:View class="sapUiSizeCompact" controllerName="sap.cdp.ums.managerequests.controller.App" displayBlock="true" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+	<App busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" id="app"/>
+</mvc:View>

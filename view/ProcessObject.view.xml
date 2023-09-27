@@ -1,0 +1,233 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<mvc:View class="sapUiSizeCompact" controllerName="sap.cdp.ums.managerequests.controller.ProcessObject" xmlns:commons="sap.ui.commons" xmlns:customUpload="sap.cdp.ums.managerequests.custom.CustomUploadCollection"
+  xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:suite="sap.suite.ui.commons" xmlns="sap.m" xmlns:layout="sap.ui.layout">
+  <Page busy="{processObjectView>/busy}" busyIndicatorDelay="{processObjectView>/delay}" id="page" navButtonPress="onNavBack"
+    showNavButton="true" title="{i18n>processObjectTitle}">
+    <content>
+      <ObjectHeader id="idProcessRequestObjectHeader"
+        number="{= ( Math.round(${TotalIssuedReturned}) + '/' + Math.round(${TotalIssueReturn}) )}"
+        numberUnit="{= (${CategoryId} === ${processObjectView>/sReturnCategory} )? ${i18n>processObjectHeaderReturnQty}: ${i18n>processObjectHeaderIssueQty}}"
+        responsive="true" title="{= ( ${RequestId} ? ${RequestId} : ${IstyleReference} ) }" tooltip="{= ( ${IstyleReference} ? ${IstyleReference} : '') }">
+        <statuses>
+          <ObjectStatus state="{= ( ${StatusId} === ${processObjectView>/sCancelledStatus} ) ? 'Warning' : 'Success' }" text="{Status}"/>
+          <ObjectStatus text="{i18n>processObjectCreatedOn}: { path: 'CreatedOn', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }}"/>
+        </statuses>
+        <attributes>
+          <ObjectAttribute text="{= ${Category} + '-' + ${Type} }"/>
+          <ObjectAttribute text="{= ${i18n>processObjectForEmployee} + ': ' + ${For} + ' (' + Math.round(${ForId}) + ')'}"/>
+          <ObjectAttribute text="{= ${i18n>gender} + ': ' + ${Gender} }"/>
+          <ObjectAttribute text="{= ${i18n>position} + ': ' + ${Position} }"/>
+          <ObjectAttribute text="{= ${i18n>department} + ': ' + ${Department} }"/>
+          <ObjectAttribute text="{= ${i18n>location} + ': ' + ${Location} }"/>
+          <ObjectAttribute id="idApprover" text="{i18n>approvers}" active="true" press="onShowApprovers" tooltip="{i18n>approversToolTip}"
+            visible="{= ( ${TypeId} === ${processObjectView>/sSpecialRequestId} || ${TypeId} === ${processObjectView>/sDamageByThirdPartyTypeId} || ${TypeId} === ${processObjectView>/sLossByThirdPartyTypeId} ||
+            ${TypeId} === ${processObjectView>/sLossOnDutyTypeId} || ${TypeId} === ${processObjectView>/sDamageOnDutyTypeId} ) ? true : false}"/>
+        </attributes>
+      </ObjectHeader>
+      <IconTabBar class="sapUiResponsiveContentPadding" expandable="false" id="idProcessRequestIconTabBar" select="onIconTabBarSelect"
+        upperCase="true">
+        <items>
+          <IconTabFilter icon="sap-icon://list" text="{i18n>items}" tooltip="{i18n>reservationItemTooltip}" count="{ItemCount}" key="Detail" >
+            <Table selectionChange="onItemSelected" busyIndicatorDelay="{processObjectView>/tableBusyDelay}" class="sapUiResponsiveMargin" id="idProceessRequestTable"
+              items="{processObjectModel>/Request/RequestItems}" noDataText="{i18n>tableNoDataText}" updateFinished="onUpdateFinished" width="auto" mode= "{=  ${processObjectModel>/Request/Editable} ? 'MultiSelect' : 'None' }">
+              <headerToolbar>
+                <OverflowToolbar visible ="{processObjectView>/bOverFlowToolBarVisible}">
+                  <ToolbarSpacer/>
+                  <Input id="idReceiver" value="{For}" type="Text" placeholder="{i18n>receiver}" showSuggestion="true" showValueHelp="true"
+                    valueHelpRequest="handleValueHelp" suggestionItems="{/Employees}" width="20%" valueHelpOnly="true"
+                    visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? false:true }">
+                    <suggestionItems>
+                      <core:Item key="{EmployeeId}" text="{Name}"/>
+                    </suggestionItems>
+                  </Input>
+                  <CheckBox text="{i18n>finalSettlement}" selected="{processObjectModel>/Request/FinalSettlement}"
+                    visible="{= ( ( ${processObjectModel>/Request/StatusId} !== ${processObjectView>/sReturnedStatusId} &amp;&amp; ${processObjectModel>/Request/TypeId} === ${processObjectView>/sEndOfServiceType} ) ? true : false ) }"
+                    enabled="{= (${processObjectModel>/Request/Editable}) ? true : false }" select="onFinalSettlementSelect"/>
+                </OverflowToolbar>
+              </headerToolbar>
+              <columns>
+                <Column id="idProcessObjectItemColumn" mergeDuplicates="true">
+                  <Text id="idProcessObjectItemColumnTitle" text="{i18n>ProcessObjectItemTableColumnTitle}" textAlign="Center"/>
+                </Column>
+                <Column >
+                  <Text text="{i18n>processObjectCustomTailoringColumnTitle}" textAlign="Center" width="100%"
+                    visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? false:true }"/>
+                </Column>
+                <Column visible="{= (${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory}) ? true:false }">
+                  <Text text="{i18n>processObjectUsedColumnTitle}" textAlign="Center"
+                    visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? true:false }" width="100%"/>
+                </Column>
+                <Column id="idProcessObjectSizeColumn">
+                  <Text id="idProcessObjectSizeColumnTitle" text="{i18n>ProcessObjectSizeTableColumnTitle}" textAlign="Center" width="100%"/>
+                </Column>
+                <Column id="idProcessObjectStorageLocationColumn">
+                  <Text id="idProcessObjectStorageLocationColumnTitle" text="{i18n>ProcessObjectStorageLocationColumnTitle}" textAlign="Center" width="100%"/>
+                </Column>
+                <Column id="idProcessObjectInStockQtyColumn">
+                  <Text id="idProcessObjectInStockQtyColumnTitle" text="{i18n>ProcessObjectInStockQtyTableColumnTitle}" textAlign="Center" width="100%"/>
+                </Column>
+                <Column id="idProcessObjectPickedRequestedQtyColumn">
+                  <Text id="idProcessObjectPickedRequestedQtyColumnTitle"
+                    text="{= (${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} )? ${i18n>processObjectReturnQuantityColumnTitle}: ${i18n>processObjectPickedRequestedColumnTitle}}"
+                    textAlign="Center" width="100%"/>
+                </Column>
+                <Column id="idProcessObjectPickUpQtyColumn">
+                  <Text id="idProcessObjectPickUpQtyColumnTitle"
+                    text="{= (${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} )? ${i18n>returnQtyTableColumnTitle}: ${i18n>pickUpQtyTableColumnTitle}}"
+                    textAlign="Center" width="100%"/>
+                </Column>
+                <Column id="idProcessObjectExchangeQuantityColumn"
+                  visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? false : true }">
+                  <Text id="idProcessObjectExchangeQuantityColumnTitle" text="{i18n>ProcessObjectExchangeQuantityTableColumnTitle}" textAlign="Center"
+                    width="100%"/>
+                </Column>
+                <Column id="idProcessObjectAlterationQuantityColumn"
+                  visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? false : true }">
+                  <Text id="idProcessObjectAlterationQuantityColumnTitle" text="{i18n>processObjectAlterationQuantityTableColumnTitle}" textAlign="Center"
+                    width="100%"/>
+                </Column>
+                <Column id="idProcessObjectPurchaseColumn" visible="{= ( ${TypeId} === ${processObjectView>/sPurchaseRequestTypeId} ) ? true : false }">
+                  <Text id="idProcessObjectPurchaseColumnTitle" text="{i18n>amountTableColumnTitle}" textAlign="Center" width="100%"
+                    visible="{= ( ${TypeId} === ${processObjectView>/sPurchaseRequestTypeId} ) ? true : false }"/>
+                </Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <layout:HorizontalLayout allowWrapping="true">
+                      <Button icon="{= ${processObjectModel>ItemText}?'sap-icon://tag':'sap-icon://blank-tag'}" press="onItemCommentPress" textAlign="Left"
+                        tooltip="{i18n>processObjectItemsCommentText}" type="Transparent"/>
+                      <Text text="{processObjectModel>Item}" tooltip="{processObjectModel>Item}"/>
+                    </layout:HorizontalLayout>
+                    <ToggleButton press="onCustTailor" pressed="{processObjectModel>CustomTailored}"
+                      text="{= ${processObjectModel>CustomTailored} ? ${i18n>processButCustomTailoring} : ${i18n>processButStandardTailoring} }"
+                      enabled="{parts: [{path:'processObjectModel>CustomTailoredEnabled'}, {path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>CancellationStatus'}] , formatter : '.formatter.getCustomTailoredButtonEnabled'}"
+                      type="Transparent" visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? false:true }"></ToggleButton>
+                    <ToggleButton press="onUsed" text="{= ${processObjectModel>IsUsed} ? ${i18n>processButUsed} : ${i18n>processButUnUsed} }" type="Transparent"
+                      pressed="{processObjectModel>IsUsed}"
+                      visible="{= ( ${processObjectModel>/Request/CategoryId} === ${processObjectView>/sReturnCategory} ) ? true:false }"
+                      enabled="{parts: [{path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>ConditionEnabled'}, {path:'processObjectModel>CancellationStatus'}] , formatter : '.formatter.getUsedButtonEnabled'}"></ToggleButton>
+                    <layout:HorizontalLayout>
+                      <Select selectedKey="{processObjectModel>NewItemId}" change="onItemSizeChange"
+                        visible="{parts: [{path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>SizeRelevant'} , {path:'processObjectModel>CancellationStatus'}] , formatter : '.formatter.getSizeSelectVisible'}"
+                        items="{processObjectModel>ItemSizes}" tooltip="{processObjectModel>NewItemId}">
+                        <core:Item key="{processObjectModel>ItemId}" text="{processObjectModel>SizeDesc}" tooltip="{processObjectModel>ItemId}"/>
+                      </Select>
+                      <Text text="{= ${processObjectModel>Size} ? ${processObjectModel>Size} : ${i18n>NotApplicable}}"
+                        visible="{parts: [{path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>SizeRelevant'}, {path:'processObjectModel>CancellationStatus'}] , formatter : '.formatter.getSizeTextVisible'}" tooltip="{=${processObjectModel>Size} ? ${processObjectModel>NewItemId} : ${i18n>NotApplicable}}"/>
+                    </layout:HorizontalLayout>
+                      <layout:HorizontalLayout>
+                      <Select change="onStorageLocationChange"
+                        visible="{parts: [{path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>StorageLocationEnabled'} , {path:'processObjectModel>CancellationStatus'} , {path:'processObjectModel>IsUsed'}] , formatter : '.formatter.getUsedStorageLocationSelectVisible'}"
+                        items="{processObjectModel>UsedStorageLocations}" 
+                        tooltip="{processObjectModel>StorageLocationId}">
+                        <core:Item key="{processObjectModel>StorLocId}" text="{processObjectModel>StorLocDesc}" tooltip="{processObjectModel>StorLocId}"/>
+                      </Select>
+                       <Select change="onStorageLocationChange"
+                        visible="{parts: [{path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>StorageLocationEnabled'} , {path:'processObjectModel>CancellationStatus'} , {path:'processObjectModel>IsUsed'}] , formatter : '.formatter.getUnusedStorageLocationSelectVisible'}"
+                        items="{processObjectModel>UnusedStorageLocations}" 
+                        tooltip="{processObjectModel>StorageLocationId}">
+                        <core:Item key="{processObjectModel>StorLocId}" text="{processObjectModel>StorLocDesc}" tooltip="{processObjectModel>StorLocId}"/>
+                      </Select>
+                      <Text text="{= ${processObjectModel>StorageLocationDesc} ? ${processObjectModel>StorageLocationDesc} : ${i18n>NotApplicable}}"
+                        visible="{parts: [{path:'processObjectModel>IsReadOnly'}, {path:'processObjectModel>StorageLocationEnabled'}, {path:'processObjectModel>CancellationStatus'}] , formatter : '.formatter.getStorageLocationTextVisible'}" tooltip="{=${processObjectModel>StorageLocationDesc} ? ${processObjectModel>StorageLocationId} : ${i18n>NotApplicable}}"/>
+                    </layout:HorizontalLayout>
+                    <Text text="{processObjectModel>InstockQuantity}" class="sapUiResponsiveMargin"></Text>
+                    <ProgressIndicator class="sapUiSmallMarginTopBottom"
+                      displayValue="{=${processObjectModel>PickedQuantity} + ' ' + ${i18n>processObjectViewOfText} + ' ' + ${processObjectModel>OrderQuantity} }"
+                      percentValue="{= (${processObjectModel>PickedQuantity}/${processObjectModel>OrderQuantity} * 100) }" showValue="true" state="Success"
+                      width="70%"/>
+                    <Input change="onPickUpQuantityChange"
+                      enabled="{parts: [{path:'processObjectModel>CustomTailored'}, {path:'processObjectModel>IsReadOnly'},
+                      {path:'processObjectModel>RemainingQuantity'},{path:'processObjectModel>CustomTailoredEnabled'}, {path:'processObjectModel>CancellationStatus'}] , formatter : '.formatter.getPickUpQuantityEnabled'}"
+                      placeholder="{i18n>quantity}" textAlign="Center"
+                      value="{ path : 'processObjectModel>ViewPickupQuantity' , type: 'sap.ui.model.type.Integer'}" type="Number"
+                      valueState="{processObjectModel>PickUpValueState}" valueStateText="{processObjectModel>PickUpValueStateText}" width="50%"></Input>
+                    <Input change="onExchangeQuantityChange" placeholder="{i18n>quantity}" textAlign="Center"
+                      value="{ path : 'processObjectModel>ViewExchangeQuantity' , type: 'sap.ui.model.type.Integer'}" type="Number"
+                      valueState="{processObjectModel>ExchangeValueState}"
+                      enabled="{parts: [{path:'processObjectModel>CustomTailored'}, {path:'processObjectModel>IsReadOnly'},
+                      {path:'processObjectModel>ExchangeEnabled'},{path:'processObjectModel>CustomTailoredEnabled'}, {path:'processObjectModel>CancellationStatus'}] , formatter :'.formatter.getExchangeQuantityEnabled'}"
+                      valueStateText="{processObjectModel>ExchangeValueStateText}" width="50%"></Input>
+                    <HBox>
+                    <Input change="onAlterationQuantityChange" placeholder="{i18n>quantity}" textAlign="Center"
+                      value="{ path : 'processObjectModel>ViewAlterationQuantity' , type: 'sap.ui.model.type.Integer' }" type="Number"
+                      valueState="{processObjectModel>AlterationValueState}"
+                      enabled="{parts: [{path:'processObjectModel>CustomTailored'}, {path:'processObjectModel>IsReadOnly'},
+                      {path:'processObjectModel>AlterationEnabled'},{path:'processObjectModel>CustomTailoredEnabled'}, {path:'processObjectModel>CancellationStatus'}] , formatter :'.formatter.getAlterationQuantityEnabled'}"
+                      valueStateText="{processObjectModel>AlterationValueStateText}"></Input>                    
+                      <Button icon="sap-icon://customer-history" press="onAlterItems" type="Transparent"></Button>
+                    </HBox>
+                    <Text
+                     text="{= (${processObjectModel>Price} * ${processObjectModel>OrderQuantity}) + ' ' + ${processObjectModel>Currency} }"
+                      textAlign="Center" width="100%"
+                      visible="{= ( ${processObjectModel>/Request/TypeId} === ${processObjectView>/sPurchaseRequestTypeId} ) ? true : false }"></Text>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </IconTabFilter>
+          <IconTabFilter expandable="false" icon="sap-icon://notes" key="HeaderComment" text="{i18n>notes}" tooltip="{i18n>reservationTooltip}">
+            <TextArea editable="false" rows="5" scrollable="true" value="{HeaderText}" width="70%"/>
+            <TextArea rows="5" id="idUserText" placeholder="{i18n>enterComments}" scrollable="true" value="{processObjectModel>/Request/HeaderText}"
+              width="70%"/>
+          </IconTabFilter>
+            <IconTabFilter count="{AttachmentCount}" expandable="false" icon="sap-icon://attachment" tooltip="{i18n>attachmentTooltip}" key="Attachment" id="idIcnTabAttachment" text="{i18n>attachments}" >
+              <layout:VerticalLayout width="100%">
+                <Table class="sapUiResponsiveMargin" growing="true" growingScrollToLoad="true"
+                  noDataText="{i18n>noAttachmentsText}" items="{Attachments}" width="auto" >
+                  <columns>
+                    <Column>
+                      <Text text="{i18n>filename}" textAlign="Center" />
+                    </Column>
+                    <Column>
+                      <Text text="{i18n>addedOn}" textAlign="Center" />
+                    </Column>
+                    <Column>
+                      <Text text="{i18n>addedBy}" textAlign="Center" />
+                    </Column>
+                  </columns>
+                  <items>
+                    <ColumnListItem type="Active" press="onAttachmentPress">
+                      <cells>
+                        <Text text="{Name}" />
+                        <Text text="{path: 'CreatedOn', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }}" />
+                        <Text text="{CreatedBy}" />
+                      </cells>
+                    </ColumnListItem>
+                  </items>
+                </Table>
+              </layout:VerticalLayout>
+            </IconTabFilter>
+          <IconTabFilter expandable="false" icon="sap-icon://history" key="Log" text="{i18n>log}" tooltip="{i18n>reservationHistoryTooltip}">
+            <List items="{Logs}">
+              <FeedListItem info="{MsgType}" sender="{User}" text="{Message}"
+                timestamp="{path: 'CreatedOn', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }}"/>
+            </List>
+          </IconTabFilter>
+        </items>
+      </IconTabBar>
+    </content>
+    <footer>
+      <OverflowToolbar id="footerToolbar">
+        <Button icon="sap-icon://alert" press="onMessagePopPress" tooltip="{i18n>messageToolTip}"/>
+        <ToolbarSpacer/>
+        <Button icon="sap-icon://complete" press="onSubmit" text="{i18n>submit}"         
+         enabled= "{parts: [{path:'processObjectView>/bSubmitEnable'}, {path:'processObjectView>/busy'}] , formatter : '.formatter.getProcessObjectSubmitEnabled'}" tooltip="{i18n>submitToolTip}"></Button>        
+        <Button id="idSignButton" icon="sap-icon://complete" press="onSignAndSubmit" text="{i18n>sign}" tooltip="{i18n>signTooltip}" enabled= "{parts: [{path:'processObjectView>/bSubmitEnable'}, {path:'processObjectView>/busy'}] , formatter : '.formatter.getProcessObjectSubmitEnabled'}"/>  
+        <Button 
+          icon="sap-icon://undo" press="onRefresh" text="{i18n>cancel}" tooltip="{i18n>cancel}"
+          enabled= "{parts: [{path:'processObjectView>/bUIDirty'}, {path:'processObjectView>/busy'}] , formatter : '.formatter.getProcessObjectCancelEnabled'}" ></Button>
+        <Button icon="sap-icon://sys-cancel" press="onCancelRequest" text="{i18n>cancelRequest}"          
+          enabled= "{parts: [{path:'processObjectView>/bCancelEnable'}, {path:'processObjectView>/busy'}] , formatter : '.formatter.getProcessObjectCancelRequestEnabled'}" 
+          tooltip="{i18n>cancelToolTip}"></Button>
+        <Button id="idPrintButton" icon="sap-icon://print" press="onPressPrint" text="{i18n>print}" tooltip="{i18n>printToolTip}"
+          enabled="{= ${processObjectView>/busy} ? false : true }" visible="{processObjectModel>/Request/IsPrintable}"></Button>
+      </OverflowToolbar>
+    </footer>
+  </Page>
+</mvc:View>

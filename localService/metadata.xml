@@ -1,0 +1,441 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZUMS_MANAGE_REQUESTS" sap:schema-version="1" xml:lang="en" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Attachment" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RequestId"/>
+                    <PropertyRef Name="EmployeeId"/>
+                </Key>
+                <Property MaxLength="10" Name="RequestId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="8" Name="EmployeeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Personnel no." sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="100" Name="Name" Type="Edm.String" sap:filterable="false" sap:label="Attachment Name" sap:sortable="false"
+                    sap:updatable="false"/>
+                <Property Name="CreatedOn" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Created on"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="80" Name="CreatedBy" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="Data" Type="Edm.Binary" sap:creatable="false" sap:filterable="false" sap:label="Attachment Data" sap:sortable="false"
+                    sap:updatable="false"/>
+                <Property MaxLength="132" Name="Url" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="URL address" sap:sortable="false"
+                    sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="CostCenter" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="CostcenterId"/>
+                </Key>
+                <Property MaxLength="10" Name="CostcenterId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Cost Center"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="40" Name="CostcenterDesc" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Description"
+                    sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="Employee" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="EmployeeId"/>
+                </Key>
+                <Property MaxLength="8" Name="EmployeeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Personnel no."
+                    sap:updatable="false"/>
+                <Property MaxLength="80" Name="Name" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Full Name" sap:updatable="false"/>
+                <Property Name="Outstation" Type="Edm.Boolean" sap:creatable="false" sap:label="Outstation Flag" sap:updatable="false"/>
+                <Property MaxLength="8" Name="ApproverId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Personnel no."
+                    sap:updatable="false"/>
+                <Property MaxLength="80" Name="Approver" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Full Name"
+                    sap:updatable="false"/>
+                <NavigationProperty FromRole="FromRole_EmployeeEmployeeEntitlements" Name="EmployeeEntitlements"
+                    Relationship="ZUMS_MANAGE_REQUESTS.EmployeeEmployeeEntitlements" ToRole="ToRole_EmployeeEmployeeEntitlements"/>
+            </EntityType>
+            <EntityType Name="EmployeeEntitlement" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="EmployeeId"/>
+                    <PropertyRef Name="ItemId"/>
+                    <PropertyRef Name="ItemPos"/>
+                    <PropertyRef Name="ItemType"/>
+                </Key>
+                <Property MaxLength="8" Name="EmployeeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Personnel no."
+                    sap:updatable="false"/>
+                <Property MaxLength="18" Name="ItemId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Material" sap:updatable="false"/>
+                <Property MaxLength="4" Name="ItemPos" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Item" sap:updatable="false"/>
+                <Property MaxLength="1" Name="ItemType" Nullable="false" Type="Edm.String" sap:creatable="false" sap:label="Record type"
+                    sap:updatable="false"/>
+                <Property MaxLength="6" Name="SetcodeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Uniform Set Code" sap:updatable="false"/>
+                <Property MaxLength="40" Name="Item" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Description"
+                    sap:updatable="false"/>
+                <Property MaxLength="30" Name="Size" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Item Size"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="EntitledQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="RemainingQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="OrderQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false" sap:label="Quantity"
+                    sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="PickedQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="InstockQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="PickupQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property MaxLength="3" Name="SizeUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="3" Name="QuantityUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property Name="Price" Precision="16" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Last Purchase Price" sap:sortable="false" sap:unit="Currency" sap:updatable="false"/>
+                <Property MaxLength="5" Name="Currency" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Currency"
+                    sap:semantics="currency-code" sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="Event" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="EventCodeId"/>
+                </Key>
+                <Property MaxLength="2" Name="EventCodeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Event Code" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="30" Name="Code" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Event Description" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="1" Name="Gender" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Gender"
+                    sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="ItemSize" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ItemId"/>
+                </Key>
+                <Property MaxLength="18" Name="ItemId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Material"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="30" Name="Size" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Item Size"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="3" Name="SizeUnit" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Base Unit" sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="Receiver" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ReceiverId"/>
+                </Key>
+                <Property MaxLength="8" Name="ReceiverId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Personnel no." sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="80" Name="Name" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="Request" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RequestId"/>
+                </Key>
+                <Property MaxLength="10" Name="RequestId" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Request"/>
+                <Property MaxLength="2" Name="CategoryId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request Category" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="50" Name="Category" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Category" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="2" Name="TypeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request Type" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="100" Name="Type" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request Type Desc" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="8" Name="ForId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Personnel no." sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="80" Name="For" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="10" Name="Gender" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Gender"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="40" Name="Position" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Positn Class Desc" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="25" Name="Location" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="City"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="CreatedOn" Nullable="false" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false"
+                    sap:label="Time Stamp" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="8" Name="RequesterId" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel no."
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="80" Name="Requester" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="8" Name="ReceiverId" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Personnel no."
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="80" Name="Receiver" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="5" Name="StatusId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Status Code" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="100" Name="Status" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Status"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="10" Name="Costcenterid" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Cost Center"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="255" Name="StatusText" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Reason Text"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="HeaderText" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Processing Text" sap:sortable="false"
+                    sap:updatable="false"/>
+                <Property Name="TotalIssueReturn" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property MaxLength="3" Name="QuantityUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property Name="ApproverText" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Processing Text"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="Log" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Processing Text" sap:sortable="false"
+                    sap:updatable="false"/>
+                <Property MaxLength="30" Name="Action" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Action Indicator"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="AttachmentCount" Nullable="false" Type="Edm.Int32" sap:creatable="false" sap:filterable="false" sap:label="Number"
+                    sap:sortable="false" sap:updatable="false"/>
+                <NavigationProperty FromRole="FromRole_RequestRequestItems" Name="RequestItems" Relationship="ZUMS_MANAGE_REQUESTS.RequestRequestItems"
+                    ToRole="ToRole_RequestRequestItems"/>
+                <NavigationProperty FromRole="FromRole_RequestRequestEmployees" Name="RequestEmployees"
+                    Relationship="ZUMS_MANAGE_REQUESTS.RequestRequestEmployees" ToRole="ToRole_RequestRequestEmployees"/>
+            </EntityType>
+            <EntityType Name="RequestEmployee" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RequestId"/>
+                    <PropertyRef Name="EmployeeId"/>
+                </Key>
+                <Property MaxLength="10" Name="RequestId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="8" Name="EmployeeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Personnel no." sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="80" Name="Name" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+                <NavigationProperty FromRole="FromRole_RequestEmployeeRequestEmployeeEntitlmnts" Name="RequestEmployeeEntitlements"
+                    Relationship="ZUMS_MANAGE_REQUESTS.RequestEmployeeRequestEmployeeEntitlmnts" ToRole="ToRole_RequestEmployeeRequestEmployeeEntitlmnts"/>
+                <NavigationProperty FromRole="FromRole_RequestEmployeeAttachments" Name="Attachments"
+                    Relationship="ZUMS_MANAGE_REQUESTS.RequestEmployeeAttachments" ToRole="ToRole_RequestEmployeeAttachments"/>
+            </EntityType>
+            <EntityType Name="RequestEmployeeEntitlement" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RequestId"/>
+                    <PropertyRef Name="EmployeeId"/>
+                    <PropertyRef Name="ItemId"/>
+                    <PropertyRef Name="ItemPos"/>
+                    <PropertyRef Name="ItemType"/>
+                </Key>
+                <Property MaxLength="10" Name="RequestId" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Request" sap:sortable="false"/>
+                <Property MaxLength="8" Name="EmployeeId" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Personnel no."/>
+                <Property MaxLength="18" Name="ItemId" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Material"/>
+                <Property MaxLength="4" Name="ItemPos" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Item"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="1" Name="ItemType" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Record type" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="6" Name="SetcodeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Uniform Set Code" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="40" Name="Item" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Description"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="30" Name="Size" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Item Size"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="EntitledQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="RemainingQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="OrderQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false" sap:label="Quantity"
+                    sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="PickedQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="InstockQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="PickupQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property MaxLength="3" Name="SizeUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="3" Name="QuantityUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property Name="Price" Precision="16" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Last Purchase Price" sap:sortable="false" sap:unit="Currency" sap:updatable="false"/>
+                <Property MaxLength="5" Name="Currency" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Currency"
+                    sap:semantics="currency-code" sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="RequestItem" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="RequestId"/>
+                    <PropertyRef Name="ItemId"/>
+                    <PropertyRef Name="ItemPos"/>
+                    <PropertyRef Name="ItemType"/>
+                </Key>
+                <Property MaxLength="10" Name="RequestId" Nullable="false" Type="Edm.String" sap:label="Request" sap:sortable="false"/>
+                <Property MaxLength="18" Name="ItemId" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Material"/>
+                <Property MaxLength="4" Name="ItemPos" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Item"/>
+                <Property MaxLength="1" Name="ItemType" Nullable="false" Type="Edm.String" sap:filterable="false" sap:label="Record type"/>
+                <Property MaxLength="80" Name="For" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Full Name"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="40" Name="Item" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Description"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="30" Name="Size" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Item Size"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="3" Name="SizeUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property Name="EntitledQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="OrderQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false" sap:label="Quantity"
+                    sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="PickedQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="InstockQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="PickupQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property MaxLength="3" Name="QuantityUnit" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Base Unit"
+                    sap:semantics="unit-of-measure" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="2" Name="Altered" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Alt/Exch Exists"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="AlterationQuantity" Precision="13" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Quantity" sap:sortable="false" sap:unit="QuantityUnit" sap:updatable="false"/>
+                <Property Name="AlterationDate" Precision="7" Type="Edm.DateTime" sap:creatable="false" sap:filterable="false" sap:label="Created on"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="1" Name="AlterationEnabled" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Alteration Enabled" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="1" Name="ExchangeEnabled" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Exchange Enabled"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="2" Name="Exchanged" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Alt/Exch Exists"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="ItemText" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Processing Text" sap:sortable="false"
+                    sap:updatable="false"/>
+                <Property MaxLength="1" Name="SizeAgnostic" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Size Agnostic Ind."
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="Returnable" Type="Edm.Boolean" sap:creatable="false" sap:filterable="false" sap:label="Entitlement Returnab"
+                    sap:sortable="false" sap:updatable="false"/>
+                <Property Name="Price" Precision="16" Scale="3" Type="Edm.Decimal" sap:creatable="false" sap:filterable="false"
+                    sap:label="Last Purchase Price" sap:sortable="false" sap:unit="Currency" sap:updatable="false"/>
+                <Property MaxLength="5" Name="Currency" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Currency"
+                    sap:semantics="currency-code" sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="RequestType" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="TypeId"/>
+                </Key>
+                <Property MaxLength="2" Name="TypeId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request Type" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="100" Name="Type" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Request Type Desc" sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="StatusType" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="StatusId"/>
+                </Key>
+                <Property MaxLength="5" Name="StatusId" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false"
+                    sap:label="Status Code" sap:sortable="false" sap:updatable="false"/>
+                <Property MaxLength="100" Name="Status" Nullable="false" Type="Edm.String" sap:creatable="false" sap:filterable="false" sap:label="Status"
+                    sap:sortable="false" sap:updatable="false"/>
+            </EntityType>
+            <Association Name="EmployeeEmployeeEntitlements" sap:content-version="1">
+                <End Multiplicity="1" Role="FromRole_EmployeeEmployeeEntitlements" Type="ZUMS_MANAGE_REQUESTS.Employee"/>
+                <End Multiplicity="*" Role="ToRole_EmployeeEmployeeEntitlements" Type="ZUMS_MANAGE_REQUESTS.EmployeeEntitlement"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_EmployeeEmployeeEntitlements">
+                        <PropertyRef Name="EmployeeId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_EmployeeEmployeeEntitlements">
+                        <PropertyRef Name="EmployeeId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RequestRequestEmployees" sap:content-version="1">
+                <End Multiplicity="1" Role="FromRole_RequestRequestEmployees" Type="ZUMS_MANAGE_REQUESTS.Request"/>
+                <End Multiplicity="*" Role="ToRole_RequestRequestEmployees" Type="ZUMS_MANAGE_REQUESTS.RequestEmployee"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RequestRequestEmployees">
+                        <PropertyRef Name="RequestId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RequestRequestEmployees">
+                        <PropertyRef Name="RequestId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RequestRequestItems" sap:content-version="1">
+                <End Multiplicity="1" Role="FromRole_RequestRequestItems" Type="ZUMS_MANAGE_REQUESTS.Request"/>
+                <End Multiplicity="*" Role="ToRole_RequestRequestItems" Type="ZUMS_MANAGE_REQUESTS.RequestItem"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RequestRequestItems">
+                        <PropertyRef Name="RequestId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RequestRequestItems">
+                        <PropertyRef Name="RequestId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RequestEmployeeAttachments" sap:content-version="1">
+                <End Multiplicity="1" Role="FromRole_RequestEmployeeAttachments" Type="ZUMS_MANAGE_REQUESTS.RequestEmployee"/>
+                <End Multiplicity="*" Role="ToRole_RequestEmployeeAttachments" Type="ZUMS_MANAGE_REQUESTS.Attachment"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RequestEmployeeAttachments">
+                        <PropertyRef Name="RequestId"/>
+                        <PropertyRef Name="EmployeeId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RequestEmployeeAttachments">
+                        <PropertyRef Name="RequestId"/>
+                        <PropertyRef Name="EmployeeId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="RequestEmployeeRequestEmployeeEntitlmnts" sap:content-version="1">
+                <End Multiplicity="1" Role="FromRole_RequestEmployeeRequestEmployeeEntitlmnts" Type="ZUMS_MANAGE_REQUESTS.RequestEmployee"/>
+                <End Multiplicity="*" Role="ToRole_RequestEmployeeRequestEmployeeEntitlmnts" Type="ZUMS_MANAGE_REQUESTS.RequestEmployeeEntitlement"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_RequestEmployeeRequestEmployeeEntitlmnts">
+                        <PropertyRef Name="RequestId"/>
+                        <PropertyRef Name="EmployeeId"/>
+                    </Principal>
+                    <Dependent Role="ToRole_RequestEmployeeRequestEmployeeEntitlmnts">
+                        <PropertyRef Name="RequestId"/>
+                        <PropertyRef Name="EmployeeId"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="ZUMS_MANAGE_REQUESTS_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.CostCenter" Name="CostCenters" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.Employee" Name="Employees" sap:addressable="false" sap:content-version="1" sap:creatable="false"
+                    sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.EmployeeEntitlement" Name="EmployeeEntitlements" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.Event" Name="Events" sap:addressable="false" sap:content-version="1" sap:creatable="false"
+                    sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.ItemSize" Name="ItemSizes" sap:addressable="false" sap:content-version="1" sap:creatable="false"
+                    sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.Receiver" Name="Receivers" sap:addressable="false" sap:content-version="1" sap:creatable="false"
+                    sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.Request" Name="Requests" sap:addressable="false" sap:content-version="1" sap:creatable="false"
+                    sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.RequestEmployee" Name="RequestEmployees" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.RequestEmployeeEntitlement" Name="RequestEmployeeEntitlements" sap:addressable="false"
+                    sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.RequestItem" Name="RequestItems" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.RequestType" Name="RequestTypes" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.StatusType" Name="StatusTypes" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <EntitySet EntityType="ZUMS_MANAGE_REQUESTS.Attachment" Name="Attachments" sap:addressable="false" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:pageable="false" sap:updatable="false"/>
+                <AssociationSet Association="ZUMS_MANAGE_REQUESTS.RequestEmployeeAttachments" Name="RequestEmployeeAttachmentsSet" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:updatable="false">
+                    <End EntitySet="RequestEmployees" Role="FromRole_RequestEmployeeAttachments"/>
+                    <End EntitySet="Attachments" Role="ToRole_RequestEmployeeAttachments"/>
+                </AssociationSet>
+                <AssociationSet Association="ZUMS_MANAGE_REQUESTS.RequestRequestItems" Name="RequestRequestItemsSet" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:updatable="false">
+                    <End EntitySet="Requests" Role="FromRole_RequestRequestItems"/>
+                    <End EntitySet="RequestItems" Role="ToRole_RequestRequestItems"/>
+                </AssociationSet>
+                <AssociationSet Association="ZUMS_MANAGE_REQUESTS.EmployeeEmployeeEntitlements" Name="EmployeeEmployeeEntitlementsSet"
+                    sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false">
+                    <End EntitySet="Employees" Role="FromRole_EmployeeEmployeeEntitlements"/>
+                    <End EntitySet="EmployeeEntitlements" Role="ToRole_EmployeeEmployeeEntitlements"/>
+                </AssociationSet>
+                <AssociationSet Association="ZUMS_MANAGE_REQUESTS.RequestEmployeeRequestEmployeeEntitlmnts" Name="RequestEmployeeRequestEmployeeEntitlmSet"
+                    sap:content-version="1" sap:creatable="false" sap:deletable="false" sap:updatable="false">
+                    <End EntitySet="RequestEmployees" Role="FromRole_RequestEmployeeRequestEmployeeEntitlmnts"/>
+                    <End EntitySet="RequestEmployeeEntitlements" Role="ToRole_RequestEmployeeRequestEmployeeEntitlmnts"/>
+                </AssociationSet>
+                <AssociationSet Association="ZUMS_MANAGE_REQUESTS.RequestRequestEmployees" Name="RequestRequestEmployeesSet" sap:content-version="1"
+                    sap:creatable="false" sap:deletable="false" sap:updatable="false">
+                    <End EntitySet="Requests" Role="FromRole_RequestRequestEmployees"/>
+                    <End EntitySet="RequestEmployees" Role="ToRole_RequestRequestEmployees"/>
+                </AssociationSet>
+                <FunctionImport EntitySet="ItemSizes" Name="FetchItemSizes" ReturnType="Collection(ZUMS_MANAGE_REQUESTS.ItemSize)" m:HttpMethod="GET">
+                    <Parameter Mode="In" Name="ItemId" Type="Edm.String"/>
+                </FunctionImport>
+            </EntityContainer>
+            <atom:link href="http://vhehddecci.ehd.rot.hec.sap.biz:8000/sap/opu/odata/sap/ZUMS_MANAGE_REQUESTS/$metadata" rel="self"
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link href="http://vhehddecci.ehd.rot.hec.sap.biz:8000/sap/opu/odata/sap/ZUMS_MANAGE_REQUESTS/$metadata" rel="latest-version"
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

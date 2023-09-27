@@ -1,0 +1,18 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+		title="{i18n>receiptTo}" 
+		class="sapUiPopupWithPadding"
+		search="handleValueHelpSearch"
+		confirm="handleValueHelpClose"
+		cancel="handleValueHelpClose"
+		items="{/Employees}">
+			<StandardListItem title="{Name}" description="{= ( Math.round(${EmployeeId}) ) }" />
+		</SelectDialog>
+	</core:FragmentDefinition>

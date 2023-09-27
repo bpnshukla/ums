@@ -1,0 +1,15 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition class="sapUiSizeCompact"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+  <Popover
+    title="{i18n>processObjectItemsCommentText}"
+    class="sapUiContentPadding" contentWidth="30%" placement="Auto">
+    <TextArea cols="60" rows="4" editable="false" scrollable="true"/>
+    <TextArea placeholder="{i18n>enterComments}" cols="60" rows="4" scrollable="true" change="onItemCommentChange" />
+  </Popover>
+</core:FragmentDefinition>

@@ -1,0 +1,40 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition class="sapUiSizeCompact" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:layout="sap.ui.layout">
+  <ResponsivePopover class="sapUiPopupWithPadding" title="{i18n>alterHistory}" placement="Top">
+    <content >
+      <Table growingScrollToLoad="true" growing="true" id="idValueHelpTable" items="{processObjectModel>AlterationItems}" noDataText="{i18n>noItemForAlter}" fixedLayout="false">
+        <columns>
+          <Column>
+            <Text text="{i18n>alterQty}"/>
+          </Column>
+          <Column>
+            <Text text="{i18n>alterDate}"/>
+          </Column>
+          <Column>
+            <Text text="{i18n>alteredDate}"/>
+          </Column>
+          <Column>
+            <Text text="{i18n>status}"/>
+          </Column>
+        </columns>
+        <ColumnListItem>
+          <cells>
+            <Text text="{= ${processObjectModel>Quantity} + ' ' +  ${processObjectModel>Unit} }"/>
+            <Text text="{= ${processObjectModel>DeliveryDate} ? ${path: 'processObjectModel>DeliveryDate', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }} : ${i18n>NotApplicable}}"/>
+            <Text text="{= ${processObjectModel>AlterationDate} ? ${path: 'processObjectModel>AlterationDate', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }} : ${i18n>NotApplicable}}"/>
+            <layout:HorizontalLayout>
+              <ToggleButton press="onAlterItemStatus"  text="{processObjectModel>StatusText}"                
+                type="Transparent" pressed="{processObjectModel>AlterationItemToggle}" 
+                enabled="{parts: [{path:'processObjectModel>CanBePicked'} ] , formatter : '.formatter.getAlterButtonEnabled'}">
+              </ToggleButton>
+            </layout:HorizontalLayout>
+          </cells>
+        </ColumnListItem>
+      </Table>
+    </content>
+  </ResponsivePopover>
+</core:FragmentDefinition>

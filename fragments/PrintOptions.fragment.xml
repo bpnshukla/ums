@@ -1,0 +1,17 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition class="sapUiSizeCompact"
+  xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Popover showHeader="false" placement="Top">
+    <content>
+      <SelectList items="{printModel>/PrintOptions}" itemPress="onPrintRequest" selectionChange="onPrintRequest">
+        <items>
+          <core:Item key="{printModel>PickedDate}" text="{= ${path: 'printModel>PickedDate', type: 'sap.ui.model.type.DateTime', formatOptions: { style : 'medium' }} + ' - ' + ${printModel>Receiver} + ' (' + Math.round(${printModel>ReceiverId}) + ')'}"/>
+        </items>
+      </SelectList>
+  </content>
+  </Popover>
+</core:FragmentDefinition>

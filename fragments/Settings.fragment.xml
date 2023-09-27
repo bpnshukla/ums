@@ -1,0 +1,15 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition class="sapUiSizeCompact" xmlns:core="sap.ui.core" xmlns="sap.m">
+	<ViewSettingsDialog confirm="onViewConfirm">
+		<sortItems>
+			<ViewSettingsItem id="idSettingsSortType" key="{constants>/SettingsSortKeyType}" 	  text="{i18n>SettingsSortType}"/>
+			<ViewSettingsItem key="{constants>/SettingsSortKeyFor}"       text="{i18n>SettingsSortRequestedFor}"/>
+			<ViewSettingsItem key="{constants>/SettingsSortKeyCreatedOn}" text="{i18n>SettingsSortCreatedOn}"/>
+			<ViewSettingsItem key="{constants>/SettingsSortKeyRequester}" text="{i18n>SettingsSortRequestedBy}"/>
+		</sortItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

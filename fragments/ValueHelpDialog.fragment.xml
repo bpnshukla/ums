@@ -1,0 +1,38 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<TableSelectDialog
+		title="{i18n>selectEmployees}" 
+		search="onSearch"
+		confirm="onValueHelpOk"
+		close="onValueHelpOk"
+		cancel="onValueHelpCancel"
+		items="{/Employees}"
+		multiSelect="true">
+		<ColumnListItem>
+			<cells>
+				<ObjectIdentifier
+					title="{Name}"
+					text="{= ( Math.round(${EmployeeId}))}" />
+					<Text text="{Approver}" visible="{objectView>/bApproverVisible}"/>
+				</cells>
+			</ColumnListItem>
+			<columns>
+				<Column >
+					<header>
+						<Text text="{i18n>employees}" tooltip="{i18n>employees}" />
+					</header>
+				</Column>						
+				<Column >
+					<header>
+						<Text text="{i18n>approvers}" tooltip="{i18n>approver}" visible="{objectView>/bApproverVisible}"/>
+					</header>
+				</Column>	
+			</columns>
+		</TableSelectDialog>
+	</core:FragmentDefinition>

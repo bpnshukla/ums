@@ -1,0 +1,164 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:View class="sapUiSizeCompact" controllerName="sap.cdp.ums.managerequests.controller.Object" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:customUpload="sap.cdp.ums.managerequests.custom.CustomUploadCollection" xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:semantic="sap.m.semantic" xmlns="sap.m">
+  <Page busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}" id="idObjectPage" navButtonPress="onNavBack" showNavButton="true">
+    <content>      
+      <VBox>
+        <Label/>
+        <!-- Empty Label for vertical spacing -->
+        <OverflowToolbar design="Solid">
+          <Select change="onRequestTypeChange" id="idRequestType" items="{path:'/RequestTypes', filters: [{ path: 'ExecutionMode', operator: 'GE',value1:'02' }]}" mode="SingleSelectMaster" selectedKey="{requestEmployees>/TypeId}">
+            <core:Item key="{TypeId}" text="{Type}"/>
+          </Select>
+          <ComboBox change="onEventCodeChange" id="idEventCode" items="{/Events}" placeholder="{i18n>cmbEvntCodePlaceHolder}"
+            visible="{objectView>/bSpecialRequest}" selectedKey="{requestEmployees>/EventCodeId}">
+            <core:Item key="{EventCodeId}" text="{Code}"/>
+          </ComboBox>
+          <Select id="idSetCode" items="{/Setcodes}" mode="SingleSelectMaster" 
+            visible="{= ${requestEmployees>/PositionClassification} ? true : false }" selectedKey="{requestEmployees>/SetcodeId}">
+            <core:Item key="{SetcodeId}" text="{SetcodeDescription}"/>
+          </Select>
+          <ComboBox change="onCostCenterChange" id="idCostCenter" items="{/CostCenters}" placeholder="{i18n>cmbCostCenterPlaceHolder}"
+            visible="{objectView>/bSpecialRequest}" selectedKey="{requestEmployees>/CostcenterId}">
+            <core:Item key="{CostcenterId}" text="{= ${CostcenterId} +' - '+ ${CostcenterDesc}}"/>
+          </ComboBox>
+          <ComboBox change="onPlantChange" id="idPlant" items="{/Plants}" placeholder="{i18n>cmbPlantPlaceHolder}"
+            visible="{objectView>/bSpecialRequest}" selectedKey="{requestEmployees>/PlantId}">
+            <core:Item key="{PlantId}" text="{Description}"/>
+          </ComboBox>
+          <Select change="onVendorChange" id="idVendor" items="{/Vendors}" placeholder="{i18n>cmbPlantPlaceHolder}" visible="{objectView>/bThirdPartyRequest}" selectedKey="{requestEmployees>/Vendor}">
+            <core:Item key="{VendorId}" text="{VendorName}"/>
+          </Select>
+          <ToolbarSpacer/>
+          <Button icon="sap-icon://notes" text="{i18n>notes}" type="Transparent" press="onHeaderCommentPress"/>
+          <Button icon="{= ${objectView>/bAllExpanded}? 'sap-icon://expand-group':'sap-icon://open-command-field' }" id="idToggleExpand"
+            press="onToggleAllExpand" text="{= ${objectView>/bAllExpanded}?${i18n>collapseAll}:${i18n>expandAll}}" type="Transparent"
+            visible="{objectView>/bEmployeesSelected}"></Button>
+          <Button icon="sap-icon://add" press="onAdd" text="{i18n>addEmployees}" type="Transparent" tooltip="{i18n>addEmployees}"
+            enabled="{objectView>/bAddEmployee}"/>
+        </OverflowToolbar>
+      </VBox>
+      <VBox busyIndicatorDelay="{objectView>/delay}" id="idVBoxEntitlements" items="{requestEmployees>/RequestEmployees}">
+        <Panel expand="onExpand" class="sapUiResponsiveMargin" expandable="true" width="auto">
+          <headerToolbar>
+            <Toolbar height="3rem">
+              <Title text="{= ${requestEmployees>Name} + ' - ' + ${requestEmployees>EmployeeId} }"/>
+              <ToolbarSpacer/>
+              <Button icon="sap-icon://delete" press="onDeleteEmployee" text="{i18n>delete}"/>
+            </Toolbar>
+          </headerToolbar>
+          <content>
+            <IconTabBar class="sapUiResponsiveContentPadding" expandable="false" id="idIconTabBar" upperCase="true" select="onIconTabBarSelect">
+            <items>
+            <IconTabFilter icon="sap-icon://list" tooltip="{i18n>reservationItemTooltip}" key="Detail" count="{ItemCount}" text="{i18n>items}" > 
+            <Table busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}"  
+              items="{requestEmployees>RequestEmployeeEntitlements}" noDataText="{i18n>loadingEntitlements}">
+              <columns>
+                <Column >
+                  <header>
+                    <Text text="{i18n>entitledItem}"/>
+                  </header>
+                </Column>
+                <Column>
+                  <header>
+                    <Text text="{i18n>itemSize}"/>
+                  </header>
+                </Column>
+                <Column>
+                  <header>
+                    <Text text="{i18n>entitledQuantity}"/>
+                  </header>
+                </Column>
+                <Column>
+                  <header>
+                    <Text text="{i18n>inStockQuantity}"/>
+                  </header>
+                </Column>
+                <Column>
+                  <header>
+                    <Text text="{i18n>remainingQuantity}"/>
+                  </header>
+                </Column>
+                <Column>
+                  <header>
+                    <Text text="{= (${requestEmployees>/TypeId} === ${objectView>/sReturnType} )? ${i18n>processObjectReturnedColumnTitle}: ${i18n>ProcessObjectPickUpQtyTableColumnTitle}}"/>
+                  </header>
+                </Column>
+                <Column visible="{objectView>/bPurchaseRequest}">
+                  <header>
+                    <Text text="{i18n>amountTableColumnTitle}" visible="{objectView>/bPurchaseRequest}"/>
+                  </header>
+                </Column>
+              </columns>
+              <ColumnListItem>
+                <cells>
+                  <ObjectIdentifier title="{requestEmployees>Item}"/>
+                  <layout:HorizontalLayout>
+                  <Select selectedKey="{requestEmployees>NewItemId}" change="onItemSizeChange" items="{requestEmployees>ItemSizes}" 
+                    visible="{parts: [{path:'requestEmployees>IsReadOnly'}, {path:'requestEmployees>SizeRelevant'}] , formatter : '.formatter.getCreateSizeSelectVisible'}" tooltip="{requestEmployees>NewItemId}"> 
+                     <core:Item key="{requestEmployees>ItemId}" text="{requestEmployees>SizeDesc}" tooltip="{requestEmployees>ItemId}"/>
+                  </Select>
+                  <Text text="{= ${requestEmployees>Size} ? ${requestEmployees>Size} : ${i18n>NotApplicable}}" 
+                    visible="{parts: [{path:'requestEmployees>IsReadOnly'}, {path:'requestEmployees>SizeRelevant'}] , formatter : '.formatter.getCreateSizeTextVisible'}" tooltip="{= ${requestEmployees>Size} ? ${requestEmployees>NewItemId} : ${i18n>NotApplicable}}"/>
+                    </layout:HorizontalLayout>                    
+                  <ObjectIdentifier text="{path: 'requestEmployees>EntitledQuantity'}"/>
+                  <ObjectIdentifier text="{path: 'requestEmployees>InstockQuantity'}"/>
+                  <ObjectIdentifier text="{path: 'requestEmployees>RemainingQuantity'}"/>
+                  <Input placeholder="{i18n>quantity}" value="{path:'requestEmployees>OrderQuantity' , type: 'sap.ui.model.type.Integer'}"  type="Number" width="30%"  change="onOrderQuantityChange" valueState="{requestEmployees>OrderValueState}" valueStateText="{requestEmployees>OrderValueStateText}" enabled="{parts: [{path:'requestEmployees>IsReadOnly'}] , formatter : '.formatter.getOrderQuantityEnabled'}" />
+                  <Text text="{= (Math.round(${requestEmployees>OrderQuantity}) > 0) ? (${requestEmployees>OrderQuantity} + ' X ' + ${requestEmployees>Price} + ' = ' + (${requestEmployees>Price} * ${requestEmployees>OrderQuantity}) + ' ' + ${requestEmployees>Currency}) : ${i18n>NotApplicable}}" 
+                    visible="{objectView>/bPurchaseRequest}"></Text>
+                </cells>
+              </ColumnListItem>
+            </Table>
+            </IconTabFilter>
+            <IconTabFilter count="{AttachmentCount}" expandable="false" icon="sap-icon://attachment" tooltip="{i18n>attachmentTooltip}" key="Attachment" id="idIcnTabAttachment" text="{i18n>attachments}" >
+              <customUpload:CustomUploadCollection />
+              <layout:VerticalLayout width="100%" visible="false" id="idAttachedFiles">
+                <Table class="sapUiResponsiveMargin" growing="true" growingScrollToLoad="true"
+                  noDataText="{i18n>noAttachmentsText}" items="{requestEmployees>/Attachments}" width="auto" >
+                  <columns>
+                    <Column>
+                      <Text text="{i18n>filename}" textAlign="Center" />
+                    </Column>
+                    <Column>
+                      <Text text="{i18n>addedOn}" textAlign="Center" />
+                    </Column>
+                    <Column>
+                      <Text text="{i18n>addedBy}" textAlign="Center" />
+                    </Column>
+                  </columns>
+                  <items>
+                    <ColumnListItem type="Active" press="onAttachmentPress">
+                      <cells>
+                        <Text text="{Name}" />
+                        <Text text="{path: 'CreatedOn', type: 'sap.ui.model.type.Date', formatOptions: { style : 'long' }}" />
+                        <Text text="{CreatedBy}" />
+                      </cells>
+                    </ColumnListItem>
+                  </items>
+                </Table>
+              </layout:VerticalLayout>                            
+            </IconTabFilter>
+            </items>
+            </IconTabBar> 
+          </content>
+        </Panel>
+      </VBox>
+    </content>
+    <footer>
+      <OverflowToolbar id="footerToolbar">
+        <Button icon="sap-icon://alert" press="onMessagePopPress" tooltip="{i18n>messageToolTip}"/>
+        <ToolbarSpacer/>
+        <Button id="idButtonSave"  enabled= "{parts: [{path:'objectView>/bEmployeesSelected'}, {path:'objectView>/busy'}] , formatter : '.formatter.getObjectActionButtonsEnabled'}"
+        icon="sap-icon://save" press="onSave" text="{i18n>save}" tooltip="{i18n>saveTool}"/>
+        <Button id="idButtonSubmit"
+        enabled= "{parts: [{path:'objectView>/bEmployeesSelected'}, {path:'objectView>/busy'}] , formatter : '.formatter.getObjectActionButtonsEnabled'}" icon="sap-icon://complete" press="onSubmit" text="{i18n>submit}"
+          tooltip="{i18n>submitTool}"/>
+        <Button enabled="{parts: [{path:'objectView>/bUIDirty'}, {path:'objectView>/busy'}] , formatter : '.formatter.getObjectCancelButtonEnabled'}" icon="sap-icon://undo" press="onCancel" text="{i18n>cancel}" tooltip="{i18n>cancel}" />
+      </OverflowToolbar>
+    </footer>
+  </Page>
+</core:View>

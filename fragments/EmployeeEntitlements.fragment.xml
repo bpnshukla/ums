@@ -1,0 +1,17 @@
+<!--
+
+    Copyright (C) 2009-2014 SAP SE or an SAP affiliate company. All rights reserved
+
+-->
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+<ColumnListItem>
+								<cells>
+									<ObjectIdentifier title="{Item}"/>
+									<ObjectIdentifier text="{Size}"/>
+									<ObjectIdentifier text="{EntitledQuantity}"/>
+									<ObjectIdentifier text="{InstockQuantity}"/>
+									<Text text="{path:'OrderQuantity', type: 'sap.ui.model.type.Integer'}"/>					
+								</cells>
+							</ColumnListItem>
+						</core:FragmentDefinition>
+						
